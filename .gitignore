@@ -1,0 +1,15 @@
+# Environment / secrets
+.env
+
+# Logs (keep the directory itself in Git)
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Composer (not used yet, kept for future safety)
+vendor/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# Front controller rewrite.
+#
+#   /api/v1/health            (project used as a document root)
+#   /javascript/api/v1/health (Apache document root = htdocs)
+#
+# are both handled internally by index.php. The browser URL never changes and
+# there is no public/ directory. Requires: AllowOverride All (or FileInfo)
+# and mod_rewrite.
+# ---------------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # The front controller is never rewritten again.
+    RewriteRule ^index\.php$ - [L]
+
+    # Make the Authorization header available to PHP (Bearer tokens).
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Internal application directories are never served directly.
+    RewriteRule ^(app|routes|database|storage|docs|resources)/ - [F]
+
+    # Existing physical files and directories stay directly accessible.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Everything else goes to the front controller.
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# No directory listings.
+Options -Indexes
+
+# .env and other dotfiles are never served.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

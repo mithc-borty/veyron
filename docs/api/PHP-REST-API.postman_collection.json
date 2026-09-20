@@ -1,0 +1,502 @@
+{
+  "info": {
+    "_postman_id": "5b8f1f4a-9c2e-4d3b-8a71-0e6d2c9b7f10",
+    "name": "PHP REST API",
+    "description": "Testing collection for the Core PHP REST API (native PHP 8.2+, PDO, no framework).\n\n**Base URL**\n\n`{{base_url}}` = `http://javascript.local/api/v1`\n\nEvery request uses the `{{base_url}}` collection variable, so switching between environments only means editing that variable.\n\n**Authentication**\n\nProtected endpoints accept either a bearer token or the login session cookie:\n\n`Authorization: Bearer {{access_token}}`\n\nLogin issues a JWT (HS256, signed with `JWT_SECRET`) when that secret is configured, otherwise a legacy opaque token; only a hash is stored server side. Browser clients instead use the session cookie set at login and must send the CSRF token from `GET /auth/csrf` in the `X-CSRF-TOKEN` header on write requests. The `access_token` collection variable is empty on purpose; never commit a real token into this file.\n\n**Purpose**\n\nDevelopment / manual testing only. Request bodies use clearly fake development credentials. Every endpoint registered in `routes/api.php` is included, covering health, authentication and user CRUD.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "description": "Liveness check for the API. Public endpoint: no authentication required.",
+      "item": [
+        {
+          "name": "GET Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"success is true\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Checks that the API is up.\n\nRoute: `GET /api/v1/health` (public)\n\nExpected response: `200 OK` with `{\"success\": true, \"message\": \"API is healthy\"}`."
+          },
+          "response": [
+            {
+              "name": "200 OK - API is healthy",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"API is healthy\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "description": "Dual-mode authentication.\n\nRegister creates an account (always `role: user`, `status: active`). Login establishes BOTH modes at once: it returns a token **once** (a JWT when `JWT_SECRET` is set, else a legacy opaque token - only its hash is stored server side) and sets the native session cookie. The Login test script captures `data.token` into the `{{access_token}}` collection variable. `GET /auth/csrf` returns the session CSRF token needed by cookie-authenticated write requests. Logout clears whichever mode authenticated the request (bearer token revoked and/or session destroyed), so log in again afterwards.",
+      "item": [
+        {
+          "name": "POST Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 (created) or 422 (validation)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201, 422]);",
+                  "});",
+                  "",
+                  "pm.test(\"No password or hash in the response\", function () {",
+                  "    pm.expect(pm.response.text()).to.not.include(\"password\");",
+                  "    pm.expect(pm.response.text()).to.not.include(\"$2y$\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"Password123!\",\n    \"password_confirmation\": \"Password123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Route: `POST /api/v1/auth/register` (public).\n\n201 with the public user, or 422 with an `errors` object (duplicate email lands on `errors.email`)."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "if (body.data && body.data.token) {",
+                  "    pm.collectionVariables.set(\"access_token\", body.data.token);",
+                  "    pm.test(\"Token captured into {{access_token}}\", function () {",
+                  "        pm.expect(body.data.token).to.be.a(\"string\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"Password123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Route: `POST /api/v1/auth/login` (public).\n\n200 with `data.token` (64 hex characters), `token_type`, `expires_at` and the public user. The test script stores the token in `{{access_token}}`.\n\n401 for wrong credentials or an unknown email (identical response), 403 when the account is inactive, 422 when fields are missing."
+          },
+          "response": []
+        },
+        {
+          "name": "GET CSRF Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"CSRF token present\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.data.csrf_token).to.be.a(\"string\").that.is.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/csrf",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "csrf"]
+            },
+            "description": "Route: `GET /api/v1/auth/csrf` (public, session based).\n\nReturns the CSRF token for the caller's session (`data.csrf_token`) and establishes an anonymous session cookie when none exists. Cookie-authenticated write requests (POST/PUT/PATCH/DELETE) must send this token in the `X-CSRF-TOKEN` header; bearer-token requests never need it."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Route: `POST /api/v1/auth/logout` (bearer).\n\nRevokes only the token used by this request (200). That token then returns 401 - run Login again for a fresh one."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Route: `GET /api/v1/auth/me` (bearer).\n\n200 with the public user of the token in use. 401 without a valid token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User CRUD. List and show need any authenticated user; create needs an administrator; update and delete need the user itself or an administrator.",
+      "item": [
+        {
+          "name": "GET Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "20" }
+              ]
+            },
+            "description": "Route: `GET /api/v1/users` (bearer). 200 with `data` and `meta` (`page`, `per_page`, `total`, `total_pages`). `per_page` is clamped to 1-100, default 20."
+          },
+          "response": []
+        },
+        {
+          "name": "GET User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "Route: `GET /api/v1/users/{id}` (bearer). 200 with the public user; 404 when the id does not exist. The id 1 is an example only."
+          },
+          "response": []
+        },
+        {
+          "name": "POST User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 (created), 403 (not admin) or 422 (validation)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201, 403, 422]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"API Test User\",\n    \"email\": \"api-test@example.com\",\n    \"password\": \"Password123!\",\n    \"password_confirmation\": \"Password123!\",\n    \"role\": \"user\",\n    \"status\": \"active\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Route: `POST /api/v1/users` (administrator only). 201 with the created user; 403 for non-administrators; 422 on validation errors."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "Route: `PUT /api/v1/users/{id}` (bearer: the user itself or an administrator). Full update: name and email are required; password is optional with password_confirmation."
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Patched Name\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "Route: `PATCH /api/v1/users/{id}` (bearer: the user itself or an administrator). Partial update: send only the fields that change. Administrators may also change role and status."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}", "type": "text" },
+              { "key": "Accept", "value": "application/json", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "Route: `DELETE /api/v1/users/{id}` (bearer: the user itself or an administrator). 200 on success; 404 when the id does not exist. The id 1 is an example only."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://javascript.local/api/v1",
+      "type": "string",
+      "description": "API base URL, including the version prefix. Used by every request in this collection."
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string",
+      "description": "Bearer token for protected endpoints (Authorization: Bearer {{access_token}}). Leave empty in the repository; set it locally after logging in."
+    }
+  ]
+}

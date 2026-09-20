@@ -1,0 +1,16 @@
+{
+    "name": "mithc-borty/veyron",
+    "description": "PHP Custom Framework",
+    "autoload": {
+        "psr-4": {
+            "MithcBorty\\Veyron\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mithun-Desktop",
+            "email": "mithc.borty@rediff.com"
+        }
+    ],
+    "require": {}
+}

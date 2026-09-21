@@ -80,7 +80,7 @@
 
     <p>
         Interactive examples of JavaScript data types,
-        arrays, objects and functions.
+        arrays, objects, functions and JSDoc type information.
     </p>
 
 
@@ -471,512 +471,162 @@
 
 
     <!-- ============================================================
-         JAVASCRIPT
+         13. JSDOC TYPE INFORMATION
          ============================================================ -->
 
-    <script>
+    <section>
 
-        /*
-        ============================================================
-        JAVASCRIPT DATA TYPES
-        ============================================================
+        <h2>13. JSDoc Type Information</h2>
 
-        Primitive types:
+        <p>
+            JSDoc provides type information to development tools.
+            It does not change JavaScript runtime behaviour.
+        </p>
 
-        1. String
-        2. Number
-        3. BigInt
-        4. Boolean
-        5. Undefined
-        6. Null
-        7. Symbol
 
-        Reference type:
+        <!-- ========================================================
+             13.1 VARIABLE TYPE ANNOTATION
+             ======================================================== -->
 
-        8. Object
+        <h3>13.1 Variable Type Annotation</h3>
 
-        Arrays and functions are special forms of objects.
-        */
+        <p>
+            <code>@type</code> documents the expected type of a value.
+        </p>
 
+        <button id="jsdocVariableButton">
+            Test @type
+        </button>
 
-        /*
-        ============================================================
-        1. STRING
-        ============================================================
+        <pre id="jsdocVariableResult"></pre>
 
-        JSDoc:
 
-        @type {string}
+        <!-- ========================================================
+             13.2 JSDOC VS RUNTIME CONVERSION
+             ======================================================== -->
 
-        tells development tools that the variable should contain
-        a string.
-        */
+        <h3>13.2 JSDoc vs Runtime Conversion</h3>
 
-        document
-            .getElementById("stringButton")
-            .addEventListener("click", function () {
+        <p>
+            JSDoc does not convert a value.
+            JavaScript functions such as <code>Number()</code>
+            perform actual runtime conversion.
+        </p>
 
-                /** @type {string} */
-                const value =
-                    document.getElementById("stringInput").value;
+        <button id="jsdocConversionButton">
+            Compare JSDoc and Number()
+        </button>
 
-                document.getElementById("stringResult").textContent =
-                    `Value: ${value}
-Type: ${typeof value}
-Length: ${value.length}`;
-            });
+        <pre id="jsdocConversionResult"></pre>
 
 
-        /*
-        ============================================================
-        2. NUMBER
-        ============================================================
+        <!-- ========================================================
+             13.3 OBJECT TYPE
+             ======================================================== -->
 
-        HTML input values are strings.
+        <h3>13.3 Object Type</h3>
 
-        Therefore Number() is used to convert the input into
-        an actual JavaScript number.
-        */
+        <p>
+            JSDoc can describe the expected structure of an object.
+        </p>
 
-        document
-            .getElementById("numberButton")
-            .addEventListener("click", function () {
+        <button id="jsdocObjectButton">
+            Test Object Type
+        </button>
 
-                /** @type {number} */
-                const value =
-                    Number(document.getElementById("numberInput").value);
+        <pre id="jsdocObjectResult"></pre>
 
-                document.getElementById("numberResult").textContent =
-                    `Value: ${value}
-Type: ${typeof value}
-Is integer: ${Number.isInteger(value)}`;
-            });
 
+        <!-- ========================================================
+             13.4 ARRAY TYPE
+             ======================================================== -->
 
-        /*
-        ============================================================
-        3. BIGINT
-        ============================================================
+        <h3>13.4 Array Type</h3>
 
-        BigInt() converts a string or integer into a BigInt.
-        */
+        <p>
+            <code>string[]</code> describes an array whose elements
+            are expected to be strings.
+        </p>
 
-        document
-            .getElementById("bigIntButton")
-            .addEventListener("click", function () {
+        <button id="jsdocArrayButton">
+            Test Array Type
+        </button>
 
-                try {
+        <pre id="jsdocArrayResult"></pre>
 
-                    /** @type {bigint} */
-                    const value =
-                        BigInt(
-                            document
-                                .getElementById("bigIntInput")
-                                .value
-                        );
 
-                    document.getElementById("bigIntResult").textContent =
-                        `Value: ${value}
-Type: ${typeof value}`;
+        <!-- ========================================================
+             13.5 FUNCTION TYPE
+             ======================================================== -->
 
-                } catch (error) {
+        <h3>13.5 Function Type Information</h3>
 
-                    document.getElementById("bigIntResult").textContent =
-                        "Invalid BigInt value.";
+        <p>
+            <code>@param</code> describes function parameters and
+            <code>@returns</code> describes the returned value.
+        </p>
 
-                }
+        <button id="jsdocFunctionButton">
+            Test Function Type
+        </button>
 
-            });
+        <pre id="jsdocFunctionResult"></pre>
 
 
-        /*
-        ============================================================
-        4. BOOLEAN
-        ============================================================
-        */
+        <!-- ========================================================
+             13.6 TYPE ASSERTION
+             ======================================================== -->
 
-        document
-            .getElementById("booleanButton")
-            .addEventListener("click", function () {
+        <h3>13.6 Type Assertion</h3>
 
-                /** @type {boolean} */
-                const value =
-                    document.getElementById("booleanInput").value === "true";
+        <p>
+            A JSDoc type assertion provides development tools
+            with a more specific type interpretation.
+            It does not convert the runtime value.
+        </p>
 
-                document.getElementById("booleanResult").textContent =
-                    `Value: ${value}
-Type: ${typeof value}`;
-            });
+        <button id="jsdocAssertionButton">
+            Test Type Assertion
+        </button>
 
+        <pre id="jsdocAssertionResult"></pre>
 
-        /*
-        ============================================================
-        5. UNDEFINED
-        ============================================================
-        */
 
-        document
-            .getElementById("undefinedButton")
-            .addEventListener("click", function () {
+        <!-- ========================================================
+             13.7 DOM TYPE ASSERTION
+             ======================================================== -->
 
-                /** @type {undefined} */
-                let value;
+        <h3>13.7 DOM Type Assertion</h3>
 
-                document.getElementById("undefinedResult").textContent =
-                    `Value: ${value}
-Type: ${typeof value}`;
-            });
+        <p>
+            JSDoc can provide more specific information about
+            a DOM element.
+        </p>
 
+        <button id="jsdocDomButton">
+            Test DOM Type
+        </button>
 
-        /*
-        ============================================================
-        6. NULL
-        ============================================================
-        */
+        <pre id="jsdocDomResult"></pre>
 
-        document
-            .getElementById("nullButton")
-            .addEventListener("click", function () {
+    </section>
 
-                /** @type {null} */
-                const value = null;
 
-                document.getElementById("nullResult").textContent =
-                    `Value: ${value}
-typeof value: ${typeof value}
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================
 
-Important:
-typeof null === "object"
+         JavaScript logic is kept in a separate file.
 
-This is a historical JavaScript behavior.`;
-            });
+         File:
+         public/frontend/assets/js/custom.js
 
+         JSDoc is used for type information.
 
-        /*
-        ============================================================
-        7. SYMBOL
-        ============================================================
-        */
+         No TypeScript checker is enabled here.
+         ============================================================ -->
 
-        document
-            .getElementById("symbolButton")
-            .addEventListener("click", function () {
-
-                /** @type {symbol} */
-                const value =
-                    Symbol(
-                        document
-                            .getElementById("symbolInput")
-                            .value
-                    );
-
-                document.getElementById("symbolResult").textContent =
-                    `Description: ${value.description}
-Type: ${typeof value}`;
-            });
-
-
-        /*
-        ============================================================
-        8. OBJECT
-        ============================================================
-
-        JSDoc can describe the structure of an object.
-        */
-
-        document
-            .getElementById("objectButton")
-            .addEventListener("click", function () {
-
-                /**
-                 * @type {{
-                 *     name: string,
-                 *     age: number,
-                 *     active: boolean
-                 * }}
-                 */
-                const user = {
-
-                    name:
-                        document
-                            .getElementById("nameInput")
-                            .value,
-
-                    age:
-                        Number(
-                            document
-                                .getElementById("ageInput")
-                                .value
-                        ),
-
-                    active:
-                        document
-                            .getElementById("activeInput")
-                            .value === "true"
-                };
-
-
-                document.getElementById("objectResult").textContent =
-                    `Object:
-${JSON.stringify(user, null, 2)}
-
-Type:
-${typeof user}
-
-Name:
-${user.name}
-
-Age:
-${user.age}
-
-Active:
-${user.active}`;
-            });
-
-
-        /*
-        ============================================================
-        9. ARRAY
-        ============================================================
-
-        string[] means:
-
-        An array containing strings.
-        */
-
-        document
-            .getElementById("arrayButton")
-            .addEventListener("click", function () {
-
-                /** @type {string[]} */
-                const values =
-                    document
-                        .getElementById("arrayInput")
-                        .value
-                        .split(",")
-                        .map(function (value) {
-
-                            return value.trim();
-
-                        });
-
-
-                document.getElementById("arrayResult").textContent =
-                    `Array:
-${JSON.stringify(values, null, 2)}
-
-Is Array:
-${Array.isArray(values)}
-
-Length:
-${values.length}
-
-First item:
-${values[0]}`;
-            });
-
-
-        /*
-        ============================================================
-        10. ARRAY OF OBJECTS
-        ============================================================
-
-        This demonstrates:
-
-        Array
-            ↓
-        Object
-            ↓
-        Properties
-        */
-
-        document
-            .getElementById("usersButton")
-            .addEventListener("click", function () {
-
-                /**
-                 * @type {{
-                 *     id: number,
-                 *     name: string,
-                 *     active: boolean
-                 * }[]}
-                 */
-                const users = [
-
-                    {
-                        id: 1,
-                        name: "Mithun",
-                        active: true
-                    },
-
-                    {
-                        id: 2,
-                        name: "Rahul",
-                        active: false
-                    },
-
-                    {
-                        id: 3,
-                        name: "Anita",
-                        active: true
-                    }
-
-                ];
-
-
-                document.getElementById("usersResult").textContent =
-                    `Users:
-
-${JSON.stringify(users, null, 2)}
-
-Number of users:
-${users.length}
-
-First user's name:
-${users[0].name}
-
-Second user's status:
-${users[1].active}`;
-            });
-
-
-        /*
-        ============================================================
-        11. FUNCTION
-        ============================================================
-
-        @param describes function parameters.
-
-        @returns describes the returned value.
-        */
-
-        /**
-         * Add two numbers.
-         *
-         * @param {number} a First number.
-         * @param {number} b Second number.
-         * @returns {number} Sum of the numbers.
-         */
-        function add(a, b) {
-
-            return a + b;
-        }
-
-
-        document
-            .getElementById("functionButton")
-            .addEventListener("click", function () {
-
-                /** @type {number} */
-                const a =
-                    Number(
-                        document
-                            .getElementById("firstNumber")
-                            .value
-                    );
-
-                /** @type {number} */
-                const b =
-                    Number(
-                        document
-                            .getElementById("secondNumber")
-                            .value
-                    );
-
-
-                const result = add(a, b);
-
-
-                document.getElementById("functionResult").textContent =
-                    `a = ${a}
-b = ${b}
-
-Result = ${result}
-
-Result type = ${typeof result}`;
-            });
-
-
-        /*
-        ============================================================
-        12. typeof
-        ============================================================
-        */
-
-        document
-            .getElementById("typeofButton")
-            .addEventListener("click", function () {
-
-                /** @type {string} */
-                const stringValue = "Hello";
-
-                /** @type {number} */
-                const numberValue = 100;
-
-                /** @type {bigint} */
-                const bigIntValue = 100n;
-
-                /** @type {boolean} */
-                const booleanValue = true;
-
-                /** @type {undefined} */
-                let undefinedValue;
-
-                /** @type {null} */
-                const nullValue = null;
-
-                /** @type {symbol} */
-                const symbolValue = Symbol("id");
-
-                /** @type {{name: string}} */
-                const objectValue = {
-                    name: "Mithun"
-                };
-
-                /** @type {string[]} */
-                const arrayValue = [
-                    "JavaScript",
-                    "PHP"
-                ];
-
-
-                /**
-                 * Functions are objects internally,
-                 * but typeof returns "function".
-                 */
-                function functionValue() { }
-
-
-                const output = [
-
-                    `String:     ${typeof stringValue}`,
-
-                    `Number:     ${typeof numberValue}`,
-
-                    `BigInt:     ${typeof bigIntValue}`,
-
-                    `Boolean:    ${typeof booleanValue}`,
-
-                    `Undefined:  ${typeof undefinedValue}`,
-
-                    `Null:       ${typeof nullValue}`,
-
-                    `Symbol:     ${typeof symbolValue}`,
-
-                    `Object:     ${typeof objectValue}`,
-
-                    `Array:      ${typeof arrayValue}`,
-
-                    `Function:   ${typeof functionValue}`
-
-                ];
-
-
-                document.getElementById("typeofResult").textContent =
-                    output.join("\n");
-            });
-
-    </script>
+    <script src="assets/js/custom.js"></script>
 
 </body>
 

@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JavaScript Data Types + JSDoc</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        h1,
+        h2 {
+            margin-top: 0;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        button {
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f4f4f4;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>JavaScript Data Types + JSDoc</h1>
+
+    <p>
+        Interactive examples of JavaScript data types,
+        arrays, objects and functions.
+    </p>
+
+
+    <!-- ============================================================
+         1. STRING
+         ============================================================ -->
+
+    <section>
+
+        <h2>1. String</h2>
+
+        <p>
+            A string represents text.
+        </p>
+
+        <div class="field">
+
+            <label for="stringInput">
+                Enter a string:
+            </label>
+
+            <input type="text" id="stringInput" value="Hello JavaScript">
+
+        </div>
+
+        <button id="stringButton">
+            Test String
+        </button>
+
+        <div id="stringResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         2. NUMBER
+         ============================================================ -->
+
+    <section>
+
+        <h2>2. Number</h2>
+
+        <p>
+            JavaScript uses the Number type for integers
+            and decimal numbers.
+        </p>
+
+        <div class="field">
+
+            <label for="numberInput">
+                Enter a number:
+            </label>
+
+            <input type="number" id="numberInput" value="100">
+
+        </div>
+
+        <button id="numberButton">
+            Test Number
+        </button>
+
+        <div id="numberResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         3. BIGINT
+         ============================================================ -->
+
+    <section>
+
+        <h2>3. BigInt</h2>
+
+        <p>
+            BigInt is used for very large integers.
+        </p>
+
+        <div class="field">
+
+            <label for="bigIntInput">
+                Enter a large integer:
+            </label>
+
+            <input type="text" id="bigIntInput" value="9007199254740993">
+
+        </div>
+
+        <button id="bigIntButton">
+            Test BigInt
+        </button>
+
+        <div id="bigIntResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         4. BOOLEAN
+         ============================================================ -->
+
+    <section>
+
+        <h2>4. Boolean</h2>
+
+        <p>
+            Boolean has only two values:
+            true or false.
+        </p>
+
+        <div class="field">
+
+            <label for="booleanInput">
+                Select a value:
+            </label>
+
+            <select id="booleanInput">
+
+                <option value="true">
+                    true
+                </option>
+
+                <option value="false">
+                    false
+                </option>
+
+            </select>
+
+        </div>
+
+        <button id="booleanButton">
+            Test Boolean
+        </button>
+
+        <div id="booleanResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         5. UNDEFINED
+         ============================================================ -->
+
+    <section>
+
+        <h2>5. Undefined</h2>
+
+        <p>
+            A declared variable without an assigned value
+            has the value undefined.
+        </p>
+
+        <button id="undefinedButton">
+            Test Undefined
+        </button>
+
+        <div id="undefinedResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         6. NULL
+         ============================================================ -->
+
+    <section>
+
+        <h2>6. Null</h2>
+
+        <p>
+            null intentionally represents the absence of a value.
+        </p>
+
+        <button id="nullButton">
+            Test Null
+        </button>
+
+        <div id="nullResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         7. SYMBOL
+         ============================================================ -->
+
+    <section>
+
+        <h2>7. Symbol</h2>
+
+        <p>
+            A Symbol creates a unique primitive value.
+        </p>
+
+        <div class="field">
+
+            <label for="symbolInput">
+                Symbol description:
+            </label>
+
+            <input type="text" id="symbolInput" value="userId">
+
+        </div>
+
+        <button id="symbolButton">
+            Create Symbol
+        </button>
+
+        <div id="symbolResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         8. OBJECT
+         ============================================================ -->
+
+    <section>
+
+        <h2>8. Object</h2>
+
+        <p>
+            Objects store data as key-value pairs.
+        </p>
+
+        <div class="field">
+
+            <label for="nameInput">
+                Name:
+            </label>
+
+            <input type="text" id="nameInput" value="Mithun">
+
+        </div>
+
+        <div class="field">
+
+            <label for="ageInput">
+                Age:
+            </label>
+
+            <input type="number" id="ageInput" value="40">
+
+        </div>
+
+        <div class="field">
+
+            <label for="activeInput">
+                Active:
+            </label>
+
+            <select id="activeInput">
+
+                <option value="true">
+                    true
+                </option>
+
+                <option value="false">
+                    false
+                </option>
+
+            </select>
+
+        </div>
+
+        <button id="objectButton">
+            Create Object
+        </button>
+
+        <div id="objectResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         9. ARRAY
+         ============================================================ -->
+
+    <section>
+
+        <h2>9. Array</h2>
+
+        <p>
+            An array stores multiple values in an ordered collection.
+        </p>
+
+        <div class="field">
+
+            <label for="arrayInput">
+                Enter comma-separated values:
+            </label>
+
+            <input type="text" id="arrayInput" value="JavaScript, PHP, Python">
+
+        </div>
+
+        <button id="arrayButton">
+            Create Array
+        </button>
+
+        <div id="arrayResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         10. ARRAY OF OBJECTS
+         ============================================================ -->
+
+    <section>
+
+        <h2>10. Array of Objects</h2>
+
+        <p>
+            Arrays can contain multiple objects.
+            This is very common with API responses.
+        </p>
+
+        <button id="usersButton">
+            Create Users
+        </button>
+
+        <div id="usersResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         11. FUNCTION
+         ============================================================ -->
+
+    <section>
+
+        <h2>11. Function</h2>
+
+        <p>
+            A function can accept parameters and return a value.
+        </p>
+
+        <div class="field">
+
+            <label for="firstNumber">
+                First number:
+            </label>
+
+            <input type="number" id="firstNumber" value="10">
+
+        </div>
+
+        <div class="field">
+
+            <label for="secondNumber">
+                Second number:
+            </label>
+
+            <input type="number" id="secondNumber" value="20">
+
+        </div>
+
+        <button id="functionButton">
+            Add Numbers
+        </button>
+
+        <div id="functionResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         12. TYPEOF
+         ============================================================ -->
+
+    <section>
+
+        <h2>12. typeof</h2>
+
+        <p>
+            typeof tells us the runtime type of a JavaScript value.
+        </p>
+
+        <button id="typeofButton">
+            Test All Types
+        </button>
+
+        <pre id="typeofResult"></pre>
+
+    </section>
+
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+
+    <script>
+
+        /*
+        ============================================================
+        JAVASCRIPT DATA TYPES
+        ============================================================
+
+        Primitive types:
+
+        1. String
+        2. Number
+        3. BigInt
+        4. Boolean
+        5. Undefined
+        6. Null
+        7. Symbol
+
+        Reference type:
+
+        8. Object
+
+        Arrays and functions are special forms of objects.
+        */
+
+
+        /*
+        ============================================================
+        1. STRING
+        ============================================================
+
+        JSDoc:
+
+        @type {string}
+
+        tells development tools that the variable should contain
+        a string.
+        */
+
+        document
+            .getElementById("stringButton")
+            .addEventListener("click", function () {
+
+                /** @type {string} */
+                const value =
+                    document.getElementById("stringInput").value;
+
+                document.getElementById("stringResult").textContent =
+                    `Value: ${value}
+Type: ${typeof value}
+Length: ${value.length}`;
+            });
+
+
+        /*
+        ============================================================
+        2. NUMBER
+        ============================================================
+
+        HTML input values are strings.
+
+        Therefore Number() is used to convert the input into
+        an actual JavaScript number.
+        */
+
+        document
+            .getElementById("numberButton")
+            .addEventListener("click", function () {
+
+                /** @type {number} */
+                const value =
+                    Number(document.getElementById("numberInput").value);
+
+                document.getElementById("numberResult").textContent =
+                    `Value: ${value}
+Type: ${typeof value}
+Is integer: ${Number.isInteger(value)}`;
+            });
+
+
+        /*
+        ============================================================
+        3. BIGINT
+        ============================================================
+
+        BigInt() converts a string or integer into a BigInt.
+        */
+
+        document
+            .getElementById("bigIntButton")
+            .addEventListener("click", function () {
+
+                try {
+
+                    /** @type {bigint} */
+                    const value =
+                        BigInt(
+                            document
+                                .getElementById("bigIntInput")
+                                .value
+                        );
+
+                    document.getElementById("bigIntResult").textContent =
+                        `Value: ${value}
+Type: ${typeof value}`;
+
+                } catch (error) {
+
+                    document.getElementById("bigIntResult").textContent =
+                        "Invalid BigInt value.";
+
+                }
+
+            });
+
+
+        /*
+        ============================================================
+        4. BOOLEAN
+        ============================================================
+        */
+
+        document
+            .getElementById("booleanButton")
+            .addEventListener("click", function () {
+
+                /** @type {boolean} */
+                const value =
+                    document.getElementById("booleanInput").value === "true";
+
+                document.getElementById("booleanResult").textContent =
+                    `Value: ${value}
+Type: ${typeof value}`;
+            });
+
+
+        /*
+        ============================================================
+        5. UNDEFINED
+        ============================================================
+        */
+
+        document
+            .getElementById("undefinedButton")
+            .addEventListener("click", function () {
+
+                /** @type {undefined} */
+                let value;
+
+                document.getElementById("undefinedResult").textContent =
+                    `Value: ${value}
+Type: ${typeof value}`;
+            });
+
+
+        /*
+        ============================================================
+        6. NULL
+        ============================================================
+        */
+
+        document
+            .getElementById("nullButton")
+            .addEventListener("click", function () {
+
+                /** @type {null} */
+                const value = null;
+
+                document.getElementById("nullResult").textContent =
+                    `Value: ${value}
+typeof value: ${typeof value}
+
+Important:
+typeof null === "object"
+
+This is a historical JavaScript behavior.`;
+            });
+
+
+        /*
+        ============================================================
+        7. SYMBOL
+        ============================================================
+        */
+
+        document
+            .getElementById("symbolButton")
+            .addEventListener("click", function () {
+
+                /** @type {symbol} */
+                const value =
+                    Symbol(
+                        document
+                            .getElementById("symbolInput")
+                            .value
+                    );
+
+                document.getElementById("symbolResult").textContent =
+                    `Description: ${value.description}
+Type: ${typeof value}`;
+            });
+
+
+        /*
+        ============================================================
+        8. OBJECT
+        ============================================================
+
+        JSDoc can describe the structure of an object.
+        */
+
+        document
+            .getElementById("objectButton")
+            .addEventListener("click", function () {
+
+                /**
+                 * @type {{
+                 *     name: string,
+                 *     age: number,
+                 *     active: boolean
+                 * }}
+                 */
+                const user = {
+
+                    name:
+                        document
+                            .getElementById("nameInput")
+                            .value,
+
+                    age:
+                        Number(
+                            document
+                                .getElementById("ageInput")
+                                .value
+                        ),
+
+                    active:
+                        document
+                            .getElementById("activeInput")
+                            .value === "true"
+                };
+
+
+                document.getElementById("objectResult").textContent =
+                    `Object:
+${JSON.stringify(user, null, 2)}
+
+Type:
+${typeof user}
+
+Name:
+${user.name}
+
+Age:
+${user.age}
+
+Active:
+${user.active}`;
+            });
+
+
+        /*
+        ============================================================
+        9. ARRAY
+        ============================================================
+
+        string[] means:
+
+        An array containing strings.
+        */
+
+        document
+            .getElementById("arrayButton")
+            .addEventListener("click", function () {
+
+                /** @type {string[]} */
+                const values =
+                    document
+                        .getElementById("arrayInput")
+                        .value
+                        .split(",")
+                        .map(function (value) {
+
+                            return value.trim();
+
+                        });
+
+
+                document.getElementById("arrayResult").textContent =
+                    `Array:
+${JSON.stringify(values, null, 2)}
+
+Is Array:
+${Array.isArray(values)}
+
+Length:
+${values.length}
+
+First item:
+${values[0]}`;
+            });
+
+
+        /*
+        ============================================================
+        10. ARRAY OF OBJECTS
+        ============================================================
+
+        This demonstrates:
+
+        Array
+            ↓
+        Object
+            ↓
+        Properties
+        */
+
+        document
+            .getElementById("usersButton")
+            .addEventListener("click", function () {
+
+                /**
+                 * @type {{
+                 *     id: number,
+                 *     name: string,
+                 *     active: boolean
+                 * }[]}
+                 */
+                const users = [
+
+                    {
+                        id: 1,
+                        name: "Mithun",
+                        active: true
+                    },
+
+                    {
+                        id: 2,
+                        name: "Rahul",
+                        active: false
+                    },
+
+                    {
+                        id: 3,
+                        name: "Anita",
+                        active: true
+                    }
+
+                ];
+
+
+                document.getElementById("usersResult").textContent =
+                    `Users:
+
+${JSON.stringify(users, null, 2)}
+
+Number of users:
+${users.length}
+
+First user's name:
+${users[0].name}
+
+Second user's status:
+${users[1].active}`;
+            });
+
+
+        /*
+        ============================================================
+        11. FUNCTION
+        ============================================================
+
+        @param describes function parameters.
+
+        @returns describes the returned value.
+        */
+
+        /**
+         * Add two numbers.
+         *
+         * @param {number} a First number.
+         * @param {number} b Second number.
+         * @returns {number} Sum of the numbers.
+         */
+        function add(a, b) {
+
+            return a + b;
+        }
+
+
+        document
+            .getElementById("functionButton")
+            .addEventListener("click", function () {
+
+                /** @type {number} */
+                const a =
+                    Number(
+                        document
+                            .getElementById("firstNumber")
+                            .value
+                    );
+
+                /** @type {number} */
+                const b =
+                    Number(
+                        document
+                            .getElementById("secondNumber")
+                            .value
+                    );
+
+
+                const result = add(a, b);
+
+
+                document.getElementById("functionResult").textContent =
+                    `a = ${a}
+b = ${b}
+
+Result = ${result}
+
+Result type = ${typeof result}`;
+            });
+
+
+        /*
+        ============================================================
+        12. typeof
+        ============================================================
+        */
+
+        document
+            .getElementById("typeofButton")
+            .addEventListener("click", function () {
+
+                /** @type {string} */
+                const stringValue = "Hello";
+
+                /** @type {number} */
+                const numberValue = 100;
+
+                /** @type {bigint} */
+                const bigIntValue = 100n;
+
+                /** @type {boolean} */
+                const booleanValue = true;
+
+                /** @type {undefined} */
+                let undefinedValue;
+
+                /** @type {null} */
+                const nullValue = null;
+
+                /** @type {symbol} */
+                const symbolValue = Symbol("id");
+
+                /** @type {{name: string}} */
+                const objectValue = {
+                    name: "Mithun"
+                };
+
+                /** @type {string[]} */
+                const arrayValue = [
+                    "JavaScript",
+                    "PHP"
+                ];
+
+
+                /**
+                 * Functions are objects internally,
+                 * but typeof returns "function".
+                 */
+                function functionValue() { }
+
+
+                const output = [
+
+                    `String:     ${typeof stringValue}`,
+
+                    `Number:     ${typeof numberValue}`,
+
+                    `BigInt:     ${typeof bigIntValue}`,
+
+                    `Boolean:    ${typeof booleanValue}`,
+
+                    `Undefined:  ${typeof undefinedValue}`,
+
+                    `Null:       ${typeof nullValue}`,
+
+                    `Symbol:     ${typeof symbolValue}`,
+
+                    `Object:     ${typeof objectValue}`,
+
+                    `Array:      ${typeof arrayValue}`,
+
+                    `Function:   ${typeof functionValue}`
+
+                ];
+
+
+                document.getElementById("typeofResult").textContent =
+                    output.join("\n");
+            });
+
+    </script>
+
+</body>
+
+</html>
